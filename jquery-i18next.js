@@ -46,7 +46,17 @@ function init(i18next, $) {
     if (attr === 'html') {
       ele.html(i18next.t(key, extendDefault(opts, ele.html())));
     } else if (attr === 'text') {
-      ele.text(i18next.t(key, extendDefault(opts, ele.text())));
+      if (opts == 'moment-js' && moment) {
+        ele.text(moment(parseInt(key)).calendar());
+      } else {
+        ele.text(i18next.t(key, extendDefault(opts, ele.text())));
+      }
+    } else if (attr === 'value') {
+      if (opts == 'moment-js' && moment) {
+        ele.val(moment(parseInt(key)).calendar());
+      } else {
+        ele.val(i18next.t(key, extendDefault(opts, ele.text())));
+      }
     } else if (attr === 'prepend') {
       ele.prepend(i18next.t(key, extendDefault(opts, ele.html())));
     } else if (attr === 'append') {
@@ -89,7 +99,7 @@ function init(i18next, $) {
       parse(target, key, opts);
     }
 
-    if (options.useOptionsAttr === true) {
+    if (options.useOptionsAttr === true && typeof opts !== "string") {
       var clone = {};
       clone = _extends({ clone: clone }, opts);
 
